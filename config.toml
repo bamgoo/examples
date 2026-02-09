@@ -6,5 +6,12 @@ driver = "nats"
 [mutex]
 driver = "redis"
 
-[http]
+[web]
 port = 80
+domain = "dev.com"
+
+[site.www]
+name = "主站"
+[site.sys]
+name = "系统"
+host = "sys"
