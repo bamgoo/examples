@@ -6,3 +6,5 @@ driver = "nats"
 [mutex]
 driver = "redis"
 
+[http]
+port = 80
