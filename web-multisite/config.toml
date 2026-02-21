@@ -1,0 +1,16 @@
+name = "web-multisite"
+
+[web]
+driver = "default"
+host = "0.0.0.0"
+port = 80
+domain = "dev.com"
+
+[site.www]
+domain = "www.dev.com"
+
+[site.user]
+domain = "user.dev.com"
+
+[site.sys]
+domain = "sys.dev.com"

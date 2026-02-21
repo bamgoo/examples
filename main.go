@@ -18,10 +18,19 @@ func main() {
 }
 
 func init() {
+
 	bamgoo.Register("index", http.Router{
 		Uri: "/", Name: "首页", Desc: "首页",
 		Action: func(ctx *http.Context) {
 			log.Debug("what")
+
+			dri, err := bamgoo.Use[MailProvider]("sendcloud", Map{"msg": "setting"})
+			log.Debug("use", err)
+			if err == nil {
+				data, res := dri.Send(Map{})
+				log.Debug("send", data, res)
+			}
+
 			ctx.Text("hello world.")
 		},
 	})
