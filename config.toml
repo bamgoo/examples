@@ -3,5 +3,9 @@ name = "bamgoo"
 [bus]
 driver = "nats"
 
+[cron]
+driver = "pgsql"
+setting = { "port" = 26257 }
+
 [http]
 port = 80

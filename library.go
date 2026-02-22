@@ -8,6 +8,7 @@ import (
 )
 
 func init() {
+
 	bamgoo.Register("sendcloud", bamgoo.Library{
 		Name: "sendcloud", Desc: "SendCloud邮件",
 		Methods: bamgoo.Methods{

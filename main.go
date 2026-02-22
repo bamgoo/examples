@@ -6,11 +6,15 @@ import (
 
 	. "github.com/bamgoo/base"
 	_ "github.com/bamgoo/builtin"
+
+	"github.com/bamgoo/cron"
+	"github.com/bamgoo/log"
 	"github.com/bamgoo/mutex"
 
 	"github.com/bamgoo/bamgoo"
 	"github.com/bamgoo/http"
-	"github.com/bamgoo/log"
+
+	_ "github.com/bamgoo/cron-pgsql"
 )
 
 func main() {
@@ -19,19 +23,25 @@ func main() {
 
 func init() {
 
+	bamgoo.Register("cron.test", bamgoo.Method{
+		Name: "test", Desc: "test",
+		Action: func(ctx *bamgoo.Context) (Map, Res) {
+			log.Debug("cron.test", time.Now())
+			return nil, bamgoo.OK
+		},
+	})
+
+	bamgoo.Register("test", cron.Job{
+		Schedule: "*/10 * * * * *", Target: "cron.test",
+	})
+
 	bamgoo.Register("index", http.Router{
 		Uri: "/", Name: "首页", Desc: "首页",
 		Action: func(ctx *http.Context) {
-			log.Debug("what")
-
-			dri, err := bamgoo.Use[MailProvider]("sendcloud", Map{"msg": "setting"})
-			log.Debug("use", err)
-			if err == nil {
-				data, res := dri.Send(Map{})
-				log.Debug("send", data, res)
-			}
-
-			ctx.Text("hello world.")
+			count, logs := cron.GetLogs("test", 0, 10)
+			ctx.JSON(Map{
+				"count": count, "logs": logs,
+			})
 		},
 	})
 
