@@ -5,7 +5,7 @@ driver = "nats"
 
 [cron]
 driver = "pgsql"
-setting = { "port" = 26257 }
+setting = { "password" = "pgsql897*(&" }
 
 [http]
 port = 80

@@ -38,17 +38,12 @@ func init() {
 	bamgoo.Register("index", http.Router{
 		Uri: "/", Name: "首页", Desc: "首页",
 		Action: func(ctx *http.Context) {
+			jobs := cron.GetJobs()
 			count, logs := cron.GetLogs("test", 0, 10)
 			ctx.JSON(Map{
 				"count": count, "logs": logs,
+				"jobs": jobs,
 			})
-		},
-	})
-
-	bamgoo.Register("www.index", http.Router{
-		Uri: "/test", Name: "首页", Desc: "首页",
-		Action: func(ctx *http.Context) {
-			ctx.Text("hello test world.")
 		},
 	})
 
