@@ -21,20 +21,20 @@ func init() {
 	bamgoo.Register("test", bamgoo.Service{
 		Name: "测试服务", Desc: "测试服务",
 		Action: func(ctx *bamgoo.Context) (Map, Res) {
-			return Map{"msg": "retry from node2"}, bamgoo.OK
+			return Map{"msg": "retry from node4"}, bamgoo.OK
 		},
 	})
 
-	bamgoo.Register("test.node2", bamgoo.Service{
+	bamgoo.Register("test.node4", bamgoo.Service{
 		Name: "test", Desc: "test",
 		Action: func(ctx *bamgoo.Context) (Map, Res) {
-			return Map{"msg": "retry from node2"}, bamgoo.OK
+			return Map{"msg": "retry from node4"}, bamgoo.OK
 		},
 	})
 
 	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
 		Action: func(ctx *bamgoo.Context) {
-			fmt.Println("node2 start....")
+			fmt.Println("node4 start....")
 		},
 	})
 
@@ -47,6 +47,18 @@ func init() {
 
 			ctx.JSON(Map{
 				"nodes": nodes, "services": services,
+			})
+		},
+	})
+
+	bamgoo.Register("invoke", http.Router{
+		Uri: "/invoke", Name: "invoke", Desc: "invoke",
+		Action: func(ctx *http.Context) {
+
+			data := ctx.Invoke("test.node3")
+
+			ctx.JSON(Map{
+				"data": data, "result": ctx.Result(),
 			})
 		},
 	})

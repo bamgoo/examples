@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	. "github.com/bamgoo/base"
 	_ "github.com/bamgoo/builtin"
-	"github.com/bamgoo/mutex"
+	_ "github.com/bamgoo/bus-redis"
 
 	"github.com/bamgoo/bamgoo"
+	"github.com/bamgoo/bus"
+	"github.com/bamgoo/http"
 )
 
 func main() {
@@ -17,20 +18,36 @@ func main() {
 
 func init() {
 
-	bamgoo.Register("test.get", bamgoo.Service{
-		Name: "查询", Desc: "查询",
+	bamgoo.Register("test", bamgoo.Service{
+		Name: "测试服务", Desc: "测试服务",
 		Action: func(ctx *bamgoo.Context) (Map, Res) {
-			return Map{"msg": "retry from node 1"}, bamgoo.Retry
+			return Map{"msg": "retry from node1"}, bamgoo.OK
+		},
+	})
+
+	bamgoo.Register("test.node1", bamgoo.Service{
+		Name: "test", Desc: "test",
+		Action: func(ctx *bamgoo.Context) (Map, Res) {
+			return Map{"msg": "retry from node1"}, bamgoo.OK
 		},
 	})
 
 	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
 		Action: func(ctx *bamgoo.Context) {
+			fmt.Println("node1 start....")
+		},
+	})
 
-			_, err := mutex.Lock("test", time.Minute)
-			fmt.Println("lock", err)
+	bamgoo.Register("index", http.Router{
+		Uri: "/", Name: "首页", Desc: "首页",
+		Action: func(ctx *http.Context) {
 
-			fmt.Println("start....")
+			nodes := bus.ListNodes()
+			services := bus.ListServices()
+
+			ctx.JSON(Map{
+				"nodes": nodes, "services": services,
+			})
 		},
 	})
 

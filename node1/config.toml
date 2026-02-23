@@ -1,8 +1,7 @@
 name = "bamgoo"
 
 [bus]
-driver = "nats"
-
-[mutex]
 driver = "redis"
 
+[http]
+port = 81
