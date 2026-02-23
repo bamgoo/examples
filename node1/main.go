@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	bamgoo.Go()
+	bamgoo.Run()
 }
 
 func init() {

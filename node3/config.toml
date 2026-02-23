@@ -1,7 +1,7 @@
 name = "bamgoo"
 
 [bus]
-driver = "redis"
+driver = "nats"
 
 
 [http]

@@ -2,7 +2,7 @@ name = "bamgoo"
 
 
 [bus]
-driver = "redis"
+driver = "nats"
 
 [http]
 port = 82
