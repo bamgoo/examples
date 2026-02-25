@@ -23,6 +23,14 @@ func main() {
 
 func init() {
 
+	bamgoo.Register("ssss.test", bamgoo.Service{
+		Name: "test", Desc: "test",
+		Action: func(ctx *bamgoo.Context) (Map, Res) {
+			log.Debug("ssss.test", time.Now())
+			return nil, bamgoo.OK
+		},
+	})
+
 	bamgoo.Register("cron.test", bamgoo.Method{
 		Name: "test", Desc: "test",
 		Action: func(ctx *bamgoo.Context) (Map, Res) {
@@ -68,7 +76,7 @@ func init() {
 	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
 		Name: "启动", Desc: "启动",
 		Action: func(ctx *bamgoo.Context) {
-			data := ctx.Invoke("test.get", Map{"msg": "msg from examples."})
+			data := ctx.Invoke("ssss.test", Map{"msg": "msg from examples."})
 			res := ctx.Result()
 
 			fmt.Println("ssss", res, data)

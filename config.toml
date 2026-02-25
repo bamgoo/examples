@@ -3,9 +3,5 @@ name = "bamgoo"
 [bus]
 driver = "nats"
 
-[cron]
-driver = "pgsql"
-setting = { "password" = "pgsql897*(&" }
-
 [http]
 port = 80
