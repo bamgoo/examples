@@ -1,0 +1,12 @@
+[data.main]
+driver = "pgsql"
+url = "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable"
+schema = "public"
+
+[data.analytics]
+driver = "pgsql"
+url = "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable"
+schema = "public"
+
+[http]
+port = 8099

@@ -1,0 +1,10 @@
+[data.main]
+driver = "sqlite"
+url = "file:data-main.db"
+
+[data.analytics]
+driver = "sqlite"
+url = "file:data-analytics.db"
+
+[http]
+port = 8099

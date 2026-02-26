@@ -1,0 +1,10 @@
+[data.main]
+driver = "mysql"
+url = "root:password@tcp(127.0.0.1:3306)/test?parseTime=true"
+
+[data.analytics]
+driver = "mysql"
+url = "root:password@tcp(127.0.0.1:3306)/test?parseTime=true"
+
+[http]
+port = 8099
