@@ -150,12 +150,14 @@ func init() {
 				fmt.Println("contains query error:", db.Error())
 			}
 
-			_ = db.Table("order").LimitRange(2, func(item Map) Res {
+			_ = db.Table("order").ScanN(2, func(item Map) Res {
 				fmt.Println("range item", item)
 				return bamgoo.OK
 			}, Map{
 				"$sort": Map{"id": ASC},
 			})
+
+			_, _ = db.View("asdf").Slice(0, 20, Map{})
 
 			fmt.Println("user", user)
 			fmt.Println("aggregate rows", rows)
@@ -197,8 +199,8 @@ func init() {
 					"cnt":   Map{"count": "*"},
 				},
 			})
-			if db.Error() != nil {
-				ctx.JSON(Map{"ok": false, "error": db.Error().Error()})
+			if err := db.Error(); err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
 				return
 			}
 
