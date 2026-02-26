@@ -1,0 +1,12 @@
+[bamgoo]
+project = "search-demo"
+
+[http]
+port = 8100
+
+[search]
+driver = "file"
+prefix = "demo"
+
+[search.setting]
+path = "data/search"

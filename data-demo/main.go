@@ -56,6 +56,24 @@ func init() {
 		},
 	})
 
+	bamgoo.Register("user", data.Watcher{
+		Action: func(m data.Mutation) {
+			log.Debug("data watcher any", m.Table, m.Op, m.Rows)
+		},
+	})
+
+	bamgoo.Register("order", data.Watcher{
+		Insert: func(m data.Mutation) {
+			log.Debug("data watcher create", m.Table, m.Key)
+		},
+		Update: func(m data.Mutation) {
+			log.Debug("data watcher update", m.Table, m.Rows)
+		},
+		Delete: func(m data.Mutation) {
+			log.Debug("data watcher delete", m.Table, m.Rows)
+		},
+	})
+
 	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
 		Name: "Data Demo", Desc: "Run data module demo on startup",
 		Action: func(ctx *bamgoo.Context) {
@@ -113,9 +131,9 @@ func init() {
 				return
 			}
 
-			_ = db.Table("order").Create(Map{"id": 1, "user_id": 1001, "amount": 39.5, "status": "paid", "created": time.Now()})
-			_ = db.Table("order").Create(Map{"id": 2, "user_id": 1001, "amount": 72.0, "status": "paid", "created": time.Now()})
-			_ = db.Table("order").Create(Map{"id": 3, "user_id": 1001, "amount": 9.0, "status": "new", "created": time.Now()})
+			_ = db.Table("order").Insert(Map{"id": 1, "user_id": 1001, "amount": 39.5, "status": "paid", "created": time.Now()})
+			_ = db.Table("order").Insert(Map{"id": 2, "user_id": 1001, "amount": 72.0, "status": "paid", "created": time.Now()})
+			_ = db.Table("order").Insert(Map{"id": 3, "user_id": 1001, "amount": 9.0, "status": "new", "created": time.Now()})
 
 			rows := db.Table("order").Aggregate(Map{
 				"status": "paid",

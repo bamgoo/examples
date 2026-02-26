@@ -1,0 +1,15 @@
+[bamgoo]
+project = "search-demo"
+
+[http]
+port = 8100
+
+[search]
+driver = "elasticsearch"
+prefix = "demo_"
+
+[search.setting]
+server = "http://127.0.0.1:9200"
+username = ""
+password = ""
+api_key = ""

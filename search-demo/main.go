@@ -1,0 +1,216 @@
+package main
+
+import (
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/bamgoo/bamgoo"
+	. "github.com/bamgoo/base"
+	_ "github.com/bamgoo/builtin"
+	"github.com/bamgoo/http"
+	"github.com/bamgoo/search"
+
+	_ "github.com/bamgoo/search-elasticsearch"
+	_ "github.com/bamgoo/search-file"
+	_ "github.com/bamgoo/search-meilisearch"
+	_ "github.com/bamgoo/search-opensearch"
+)
+
+const indexName = "article"
+
+func main() {
+	bamgoo.Go()
+}
+
+func init() {
+	bamgoo.Register(indexName, search.Index{
+		Name:        "文章索引",
+		Primary:     "id",
+		StrictWrite: true,
+		StrictRead:  false,
+		Attributes: Vars{
+			"id":       Var{Type: "string", Required: true},
+			"title":    Var{Type: "string", Required: true},
+			"content":  Var{Type: "string"},
+			"category": Var{Type: "string"},
+			"tags":     Var{Type: "[string]"},
+			"score":    Var{Type: "float"},
+			"created":  Var{Type: "timestamp"},
+		},
+	})
+
+	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
+		Name: "search-demo-init",
+		Desc: "create index and seed docs",
+		Action: func(ctx *bamgoo.Context) {
+			_ = search.Upsert(indexName, []search.Document{
+				{ID: "1001", Payload: Map{"title": "Go 微服务实战", "content": "Bamgoo + Nomad + NATS 快速搭建高性能服务", "category": "tech", "tags": []string{"go", "microservice", "nomad"}, "score": 9.7, "created": time.Now().Unix()}},
+				{ID: "1002", Payload: Map{"title": "搜索系统设计", "content": "全文检索、过滤、分面和高亮设计要点", "category": "arch", "tags": []string{"search", "design"}, "score": 9.3, "created": time.Now().Unix()}},
+				{ID: "1003", Payload: Map{"title": "Meilisearch 上手", "content": "轻量搜索服务快速接入指南", "category": "tech", "tags": []string{"meilisearch", "search"}, "score": 8.8, "created": time.Now().Unix()}},
+				{ID: "1004", Payload: Map{"title": "OpenSearch 聚合", "content": "通过 terms 聚合做 category 统计", "category": "arch", "tags": []string{"opensearch", "aggs"}, "score": 8.9, "created": time.Now().Unix()}},
+			})
+		},
+	})
+
+	bamgoo.Register("search.index", http.Router{
+		Uri:  "/",
+		Name: "search-demo-index",
+		Desc: "help",
+		Action: func(ctx *http.Context) {
+			ctx.JSON(Map{
+				"ok": true,
+				"routes": []string{
+					"GET /search?q=go&category=tech&offset=0&limit=10",
+					"GET /search/count?q=search",
+					"GET /search/suggest?q=go&limit=5",
+					"POST /search/reindex",
+					"DELETE /search/doc/{id}",
+				},
+			})
+		},
+	})
+
+	bamgoo.Register("search.query", http.Router{
+		Uri:  "/search",
+		Name: "search-query",
+		Desc: "query docs",
+		Action: func(ctx *http.Context) {
+			q, _ := ctx.Query["q"].(string)
+			category, _ := ctx.Query["category"].(string)
+			scoreGt := toFloat(ctx.Query["score_gt"], 0)
+			offset := toInt(ctx.Query["offset"], 0)
+			limit := toInt(ctx.Query["limit"], 10)
+
+			filters := Map{}
+			if strings.TrimSpace(category) != "" {
+				filters["category"] = Map{"$eq": category}
+			}
+			if scoreGt > 0 {
+				filters["score"] = Map{"$gt": scoreGt}
+			}
+
+			res, err := search.Search(indexName, q, Map{
+				"$offset":    offset,
+				"$limit":     limit,
+				"$filters":   filters,
+				"$sort":      []Map{{"score": DESC}, {"id": ASC}},
+				"$fields":    []string{"title", "content", "category", "tags", "score", "created"},
+				"$facets":    []string{"category"},
+				"$highlight": []string{"title", "content"},
+			})
+			if err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
+				return
+			}
+			ctx.JSON(Map{"ok": true, "query": q, "result": res})
+		},
+	})
+
+	bamgoo.Register("search.count", http.Router{
+		Uri:  "/search/count",
+		Name: "search-count",
+		Desc: "count docs",
+		Action: func(ctx *http.Context) {
+			q, _ := ctx.Query["q"].(string)
+			total, err := search.Count(indexName, q)
+			if err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
+				return
+			}
+			ctx.JSON(Map{"ok": true, "query": q, "total": total})
+		},
+	})
+
+	bamgoo.Register("search.suggest", http.Router{
+		Uri:  "/search/suggest",
+		Name: "search-suggest",
+		Desc: "suggest docs",
+		Action: func(ctx *http.Context) {
+			q, _ := ctx.Query["q"].(string)
+			limit := toInt(ctx.Query["limit"], 10)
+			items, err := search.Suggest(indexName, q, limit)
+			if err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
+				return
+			}
+			ctx.JSON(Map{"ok": true, "query": q, "items": items})
+		},
+	})
+
+	bamgoo.Register("search.reindex", http.Router{
+		Uri:  "/search/reindex",
+		Name: "search-reindex",
+		Desc: "reindex docs",
+		Action: func(ctx *http.Context) {
+			err := search.Upsert(indexName, []search.Document{
+				{ID: "1005", Payload: Map{"title": "Elasticsearch 实战", "content": "字段过滤与分面查询示例", "category": "tech", "tags": []string{"es", "filter", "facet"}, "score": 9.1, "created": time.Now().Unix()}},
+			})
+			if err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
+				return
+			}
+			ctx.JSON(Map{"ok": true, "msg": "reindex done"})
+		},
+	})
+
+	bamgoo.Register("search.delete", http.Router{
+		Uri:  "/search/doc/{id}",
+		Name: "search-delete",
+		Desc: "delete doc",
+		Action: func(ctx *http.Context) {
+			id, _ := ctx.Params["id"].(string)
+			if strings.TrimSpace(id) == "" {
+				ctx.JSON(Map{"ok": false, "error": "id is required"})
+				return
+			}
+			if err := search.Delete(indexName, []string{id}); err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
+				return
+			}
+			ctx.JSON(Map{"ok": true, "id": id})
+		},
+	})
+}
+
+func toInt(v Any, def int) int {
+	switch vv := v.(type) {
+	case int:
+		return vv
+	case int64:
+		return int(vv)
+	case float64:
+		return int(vv)
+	case string:
+		if vv == "" {
+			return def
+		}
+		out, err := strconv.Atoi(vv)
+		if err == nil {
+			return out
+		}
+	}
+	return def
+}
+
+func toFloat(v Any, def float64) float64 {
+	switch vv := v.(type) {
+	case float64:
+		return vv
+	case float32:
+		return float64(vv)
+	case int:
+		return float64(vv)
+	case int64:
+		return float64(vv)
+	case string:
+		if vv == "" {
+			return def
+		}
+		out, err := strconv.ParseFloat(vv, 64)
+		if err == nil {
+			return out
+		}
+	}
+	return def
+}
