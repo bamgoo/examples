@@ -105,7 +105,7 @@ func init() {
 					"created": time.Now(),
 				},
 				"$inc": Map{
-					"login_times": 1,
+					"login_times": ASC,
 				},
 			}, Map{"id": 1001})
 			if db.Error() != nil {
@@ -144,7 +144,7 @@ func init() {
 
 			tagged := db.Table("user").Query(Map{
 				"tags":  Map{"$contains": []string{"go"}},
-				"$sort": Map{"id": 1},
+				"$sort": Map{"id": ASC},
 			})
 			if db.Error() != nil {
 				fmt.Println("contains query error:", db.Error())
@@ -154,7 +154,7 @@ func init() {
 				fmt.Println("range item", item)
 				return bamgoo.OK
 			}, Map{
-				"$sort": Map{"id": 1},
+				"$sort": Map{"id": ASC},
 			})
 
 			fmt.Println("user", user)
@@ -234,7 +234,7 @@ func init() {
 			defer db.Close()
 
 			items := db.Table("order_agg").Query(Map{
-				"$sort": Map{"user_id": 1},
+				"$sort": Map{"user_id": ASC},
 			})
 			if db.Error() != nil {
 				ctx.JSON(Map{"ok": false, "error": db.Error().Error()})
