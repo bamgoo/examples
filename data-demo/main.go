@@ -12,6 +12,7 @@ import (
 	_ "github.com/bamgoo/data-pgsql"
 	_ "github.com/bamgoo/data-sqlite"
 	"github.com/bamgoo/http"
+	"github.com/bamgoo/log"
 )
 
 func main() {
@@ -62,10 +63,16 @@ func init() {
 			defer db.Close()
 			fmt.Println("capabilities", db.Capabilities())
 
+			q, _ := data.Parse(Map{
+				"status": "active",
+				"$limit": 10,
+			})
+			log.Debug("q", q)
+
 			adb := data.Base("analytics")
 			defer adb.Close()
 
-			_, _ = db.Exec(`CREATE TABLE IF NOT EXISTS "user" (
+			_ = db.Exec(`CREATE TABLE IF NOT EXISTS "user" (
 				"id" INTEGER PRIMARY KEY,
 				"name" TEXT NOT NULL,
 				"status" TEXT,
@@ -75,21 +82,21 @@ func init() {
 				"created" DATETIME
 			)`)
 
-			_, _ = db.Exec(`CREATE TABLE IF NOT EXISTS "order" (
+			_ = db.Exec(`CREATE TABLE IF NOT EXISTS "order" (
 				"id" INTEGER PRIMARY KEY,
 				"user_id" INTEGER NOT NULL,
 				"amount" REAL,
 				"status" TEXT,
 				"created" DATETIME
 			)`)
-			_, _ = adb.Exec(`CREATE TABLE IF NOT EXISTS "order_agg" (
+			_ = adb.Exec(`CREATE TABLE IF NOT EXISTS "order_agg" (
 				"user_id" INTEGER PRIMARY KEY,
 				"total" REAL,
 				"cnt" INTEGER,
 				"updated" DATETIME
 			)`)
 
-			user, err := db.Table("user").Upsert(Map{
+			user := db.Table("user").Upsert(Map{
 				"$set": Map{
 					"name":    "Alice",
 					"status":  "active",
@@ -101,16 +108,16 @@ func init() {
 					"login_times": 1,
 				},
 			}, Map{"id": 1001})
-			if err != nil {
-				fmt.Println("upsert user error:", err)
+			if db.Error() != nil {
+				fmt.Println("upsert user error:", db.Error())
 				return
 			}
 
-			_, _ = db.Table("order").Create(Map{"id": 1, "user_id": 1001, "amount": 39.5, "status": "paid", "created": time.Now()})
-			_, _ = db.Table("order").Create(Map{"id": 2, "user_id": 1001, "amount": 72.0, "status": "paid", "created": time.Now()})
-			_, _ = db.Table("order").Create(Map{"id": 3, "user_id": 1001, "amount": 9.0, "status": "new", "created": time.Now()})
+			_ = db.Table("order").Create(Map{"id": 1, "user_id": 1001, "amount": 39.5, "status": "paid", "created": time.Now()})
+			_ = db.Table("order").Create(Map{"id": 2, "user_id": 1001, "amount": 72.0, "status": "paid", "created": time.Now()})
+			_ = db.Table("order").Create(Map{"id": 3, "user_id": 1001, "amount": 9.0, "status": "new", "created": time.Now()})
 
-			rows, err := db.Table("order").Aggregate(Map{
+			rows := db.Table("order").Aggregate(Map{
 				"status": "paid",
 				"$group": []string{"user_id"},
 				"$agg": Map{
@@ -121,12 +128,12 @@ func init() {
 					"total": Map{"$gt": 50},
 				},
 			})
-			if err != nil {
-				fmt.Println("aggregate error:", err)
+			if db.Error() != nil {
+				fmt.Println("aggregate error:", db.Error())
 				return
 			}
 			for _, row := range rows {
-				_, _ = adb.Table("order_agg").Upsert(Map{
+				_ = adb.Table("order_agg").Upsert(Map{
 					"$set": Map{
 						"total":   row["total"],
 						"cnt":     row["cnt"],
@@ -135,12 +142,12 @@ func init() {
 				}, Map{"user_id": row["user_id"]})
 			}
 
-			tagged, err := db.Table("user").Query(Map{
+			tagged := db.Table("user").Query(Map{
 				"tags":  Map{"$contains": []string{"go"}},
 				"$sort": Map{"id": 1},
 			})
-			if err != nil {
-				fmt.Println("contains query error:", err)
+			if db.Error() != nil {
+				fmt.Println("contains query error:", db.Error())
 			}
 
 			_ = db.Table("order").LimitRange(2, func(item Map) Res {
@@ -164,9 +171,9 @@ func init() {
 			db := data.Base("main")
 			defer db.Close()
 
-			user, err := db.Table("user").Entity(ctx.Params["id"])
-			if err != nil {
-				ctx.JSON(Map{"ok": false, "error": err.Error()})
+			user := db.Table("user").Entity(ctx.Params["id"])
+			if db.Error() != nil {
+				ctx.JSON(Map{"ok": false, "error": db.Error().Error()})
 				return
 			}
 
@@ -182,7 +189,7 @@ func init() {
 			db := data.Base("main")
 			defer db.Close()
 
-			rows, err := db.Table("order").Aggregate(Map{
+			rows := db.Table("order").Aggregate(Map{
 				"status": "paid",
 				"$group": []string{"user_id"},
 				"$agg": Map{
@@ -190,8 +197,8 @@ func init() {
 					"cnt":   Map{"count": "*"},
 				},
 			})
-			if err != nil {
-				ctx.JSON(Map{"ok": false, "error": err.Error()})
+			if db.Error() != nil {
+				ctx.JSON(Map{"ok": false, "error": db.Error().Error()})
 				return
 			}
 
@@ -226,11 +233,11 @@ func init() {
 			db := data.Base("analytics")
 			defer db.Close()
 
-			items, err := db.Table("order_agg").Query(Map{
+			items := db.Table("order_agg").Query(Map{
 				"$sort": Map{"user_id": 1},
 			})
-			if err != nil {
-				ctx.JSON(Map{"ok": false, "error": err.Error()})
+			if db.Error() != nil {
+				ctx.JSON(Map{"ok": false, "error": db.Error().Error()})
 				return
 			}
 
