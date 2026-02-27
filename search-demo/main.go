@@ -44,12 +44,12 @@ func init() {
 		Name: "search-demo-init",
 		Desc: "create index and seed docs",
 		Action: func(ctx *bamgoo.Context) {
-			_ = search.Upsert(indexName, []search.Document{
-				{ID: "1001", Payload: Map{"title": "Go 微服务实战", "content": "Bamgoo + Nomad + NATS 快速搭建高性能服务", "category": "tech", "tags": []string{"go", "microservice", "nomad"}, "score": 9.7, "created": time.Now().Unix()}},
-				{ID: "1002", Payload: Map{"title": "搜索系统设计", "content": "全文检索、过滤、分面和高亮设计要点", "category": "arch", "tags": []string{"search", "design"}, "score": 9.3, "created": time.Now().Unix()}},
-				{ID: "1003", Payload: Map{"title": "Meilisearch 上手", "content": "轻量搜索服务快速接入指南", "category": "tech", "tags": []string{"meilisearch", "search"}, "score": 8.8, "created": time.Now().Unix()}},
-				{ID: "1004", Payload: Map{"title": "OpenSearch 聚合", "content": "通过 terms 聚合做 category 统计", "category": "arch", "tags": []string{"opensearch", "aggs"}, "score": 8.9, "created": time.Now().Unix()}},
-			})
+			_ = search.Upsert(indexName,
+				Map{"id": "1001", "title": "Go 微服务实战", "content": "Bamgoo + Nomad + NATS 快速搭建高性能服务", "category": "tech", "tags": []string{"go", "microservice", "nomad"}, "score": 9.7, "created": time.Now().Unix()},
+				Map{"id": "1002", "title": "搜索系统设计", "content": "全文检索、过滤、分面和高亮设计要点", "category": "arch", "tags": []string{"search", "design"}, "score": 9.3, "created": time.Now().Unix()},
+				Map{"id": "1003", "title": "Meilisearch 上手", "content": "轻量搜索服务快速接入指南", "category": "tech", "tags": []string{"meilisearch", "search"}, "score": 8.8, "created": time.Now().Unix()},
+				Map{"id": "1004", "title": "OpenSearch 聚合", "content": "通过 terms 聚合做 category 统计", "category": "arch", "tags": []string{"opensearch", "aggs"}, "score": 8.9, "created": time.Now().Unix()},
+			)
 		},
 	})
 
@@ -63,8 +63,8 @@ func init() {
 				"routes": []string{
 					"GET /search?q=go&category=tech&offset=0&limit=10",
 					"GET /search/count?q=search",
-					"GET /search/suggest?q=go&limit=5",
 					"POST /search/reindex",
+					"POST /search/clear",
 					"DELETE /search/doc/{id}",
 				},
 			})
@@ -122,30 +122,14 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.suggest", http.Router{
-		Uri:  "/search/suggest",
-		Name: "search-suggest",
-		Desc: "suggest docs",
-		Action: func(ctx *http.Context) {
-			q, _ := ctx.Query["q"].(string)
-			limit := toInt(ctx.Query["limit"], 10)
-			items, err := search.Suggest(indexName, q, limit)
-			if err != nil {
-				ctx.JSON(Map{"ok": false, "error": err.Error()})
-				return
-			}
-			ctx.JSON(Map{"ok": true, "query": q, "items": items})
-		},
-	})
-
 	bamgoo.Register("search.reindex", http.Router{
 		Uri:  "/search/reindex",
 		Name: "search-reindex",
 		Desc: "reindex docs",
 		Action: func(ctx *http.Context) {
-			err := search.Upsert(indexName, []search.Document{
-				{ID: "1005", Payload: Map{"title": "Elasticsearch 实战", "content": "字段过滤与分面查询示例", "category": "tech", "tags": []string{"es", "filter", "facet"}, "score": 9.1, "created": time.Now().Unix()}},
-			})
+			err := search.Upsert(indexName,
+				Map{"id": "1005", "title": "Elasticsearch 实战", "content": "字段过滤与分面查询示例", "category": "tech", "tags": []string{"es", "filter", "facet"}, "score": 9.1, "created": time.Now().Unix()},
+			)
 			if err != nil {
 				ctx.JSON(Map{"ok": false, "error": err.Error()})
 				return
@@ -169,6 +153,19 @@ func init() {
 				return
 			}
 			ctx.JSON(Map{"ok": true, "id": id})
+		},
+	})
+
+	bamgoo.Register("search.clear", http.Router{
+		Uri:  "/search/clear",
+		Name: "search-clear",
+		Desc: "clear index",
+		Action: func(ctx *http.Context) {
+			if err := search.Clear(indexName); err != nil {
+				ctx.JSON(Map{"ok": false, "error": err.Error()})
+				return
+			}
+			ctx.JSON(Map{"ok": true, "index": indexName})
 		},
 	})
 }
