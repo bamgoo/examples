@@ -9,7 +9,7 @@ import (
 	_ "github.com/bamgoo/builtin"
 	"github.com/bamgoo/data"
 	_ "github.com/bamgoo/data-mysql"
-	_ "github.com/bamgoo/data-pgsql"
+	_ "github.com/bamgoo/data-postgresql"
 	_ "github.com/bamgoo/data-sqlite"
 	"github.com/bamgoo/http"
 	"github.com/bamgoo/log"

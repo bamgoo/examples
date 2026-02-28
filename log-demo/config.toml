@@ -1,0 +1,25 @@
+[log.console]
+driver = "default"
+levels = ["notice", "warning", "error", "panic", "fatal"]
+buffer = 4096
+batch = 1024
+timeout = "100ms"
+overflow = "block"
+format = "%time% [%level%] %body%"
+
+[log.greptime]
+driver = "greptime"
+levels = ["info", "notice", "warning", "error", "panic", "fatal"]
+json = false
+sample = 1
+buffer = 8192
+batch = 2048
+timeout = "150ms"
+
+[log.greptime.setting]
+host = "127.0.0.1"
+port = 4001
+database = "public"
+table = "logs"
+insecure = true
+timeout = "5s"
