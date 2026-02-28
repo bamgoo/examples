@@ -7,6 +7,7 @@ import (
 	"github.com/bamgoo/bamgoo"
 	. "github.com/bamgoo/base"
 	_ "github.com/bamgoo/builtin"
+	"github.com/bamgoo/http"
 	"github.com/bamgoo/log"
 	_ "github.com/bamgoo/log-file"
 	_ "github.com/bamgoo/log-greptime"
@@ -17,6 +18,15 @@ func main() {
 }
 
 func init() {
+	bamgoo.Register("stats", http.Router{
+		Uri:  "/stats",
+		Name: "日志统计",
+		Desc: "log stats",
+		Action: func(ctx *http.Context) {
+			ctx.JSON(log.Stats())
+		},
+	})
+
 	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
 		Name: "Log Demo",
 		Desc: "emit many logs to test async batch and overflow strategy",

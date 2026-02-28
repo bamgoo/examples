@@ -26,8 +26,8 @@ It also demonstrates:
 
 Queue overflow strategy:
 
-- `overflow = "drop_oldest"`: queue full时丢最旧日志，优先保留最新日志。
-- Optional: `overflow = "drop_newest" | "block"`.
+- `overflow = "block"`: queue full 时阻塞，优先保证日志不丢。
+- Optional: `overflow = "drop"` + `drop = "old|new"`.
 
 Useful settings:
 
@@ -46,3 +46,7 @@ Greptime output (when using `config.greptime.toml`):
 - endpoint: `127.0.0.1:4001`
 - database: `public`
 - table: `logs`
+
+HTTP stats endpoint:
+
+- `GET http://127.0.0.1:8101/stats`
