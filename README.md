@@ -1,6 +1,11 @@
 # examples
 
-`examples` 提供完整可运行示例。
+`examples` 提供可直接运行的模块/驱动示例。
+
+## 主要功能
+
+- 快速验证配置是否可用
+- 提供最小可复制接入样例
 
 ## 快速开始
 
@@ -9,18 +14,3 @@ cd examples/search-demo
 cp config.file.toml config.toml
 go run .
 ```
-
-## 示例清单
-
-- `data-demo`
-- `log-demo`
-- `trace-demo`
-- `search-demo`
-- `web-multisite`
-
-## 建议顺序
-
-1. `log-demo`
-2. `trace-demo`
-3. `search-demo`
-4. `data-demo`
