@@ -1,21 +1,26 @@
 # examples
-infrago examples.
 
-## Demos
+`examples` 提供完整可运行示例。
 
-- `data-demo`: data 模块多驱动示例（sqlite/mysql/postgresql）
-- `trace-demo`: trace 模块示例（默认驱动控制台输出）
-- `log-demo`: log 模块示例（异步批量写入 + overflow 策略）
-- `search-demo`: search 模块 + file/meilisearch/opensearch/elasticsearch 驱动示例（`Upsert(index, rows ...Map)` + `$` DSL）
-
-## Quick Start
+## 快速开始
 
 ```bash
-cd search-demo
+cd examples/search-demo
 cp config.file.toml config.toml
 go run .
 ```
 
-```bash
-curl "http://127.0.0.1:8100/search?q=search&category=tech&score_gt=8.5&offset=0&limit=10"
-```
+## 示例清单
+
+- `data-demo`
+- `log-demo`
+- `trace-demo`
+- `search-demo`
+- `web-multisite`
+
+## 建议顺序
+
+1. `log-demo`
+2. `trace-demo`
+3. `search-demo`
+4. `data-demo`
