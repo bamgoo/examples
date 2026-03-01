@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/infrago/infra"
 	. "github.com/infrago/base"
 	_ "github.com/infrago/builtin"
 	"github.com/infrago/http"
+	"github.com/infrago/infra"
+	"github.com/infrago/log"
 	_ "github.com/infrago/trace"
 	_ "github.com/infrago/trace-file"
 	_ "github.com/infrago/trace-greptime"
@@ -31,6 +32,7 @@ func init() {
 		Action: func(ctx *infra.Context) Map {
 			ctx.Trace("搞飞机了这里")
 			time.Sleep(10 * time.Millisecond)
+			log.Debug("what")
 			return Map{"ok": true, "at": time.Now().UnixMilli()}
 		},
 	})

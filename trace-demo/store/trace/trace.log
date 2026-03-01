@@ -1,4 +1,20 @@
-2026-02-28 00:55:24.841 [ok] 搞飞机了这里 trace=tr18985d327fa80d301 span=sp18985d327fa86af04 cost=0ms
-2026-02-28 00:55:24.852 [ok] service:trace.child trace=tr18985d327fa80d301 span=sp18985d327fa867083 cost=11ms
-2026-02-28 00:55:24.852 [ok] 开始 trace=tr18985d327fa80d301 span=sp18985d328050bcc85 cost=0ms
-2026-02-28 00:55:24.852 [ok] trigger:start trace=tr18985d327fa80d301 span=sp18985d327fa84f982 cost=11ms
+2026-03-01 12:18:07.109608 -0800 PST m=+0.029415834 [ok] 搞飞机了这里 trace=tr1898d1085656f0a01 span=sp1898d1085663b2404 cost=250ns
+2026-03-01 12:18:07.120644 -0800 PST m=+0.040449917 [ok] internal trace=tr1898d1085656f0a01 span=sp1898d1085663aa703 cost=11035792ns
+2026-03-01 12:18:07.120649 -0800 PST m=+0.040455626 [ok] 开始 trace=tr1898d1085656f0a01 span=sp1898d108570c1f705 cost=583ns
+2026-03-01 12:18:07.120663 -0800 PST m=+0.040468709 [ok] internal trace=tr1898d1085656f0a01 span=sp1898d108566393002 cost=11059375ns
+2026-03-01 12:18:33.67573 -0800 PST m=+0.000913376 [ok] 搞飞机了这里 trace=tr1898d10e85da17201 span=sp1898d10e85da88684 cost=167ns
+2026-03-01 12:18:33.686855 -0800 PST m=+0.012038251 [ok] internal trace=tr1898d10e85da17201 span=sp1898d10e85da80983 cost=11126708ns
+2026-03-01 12:18:33.686892 -0800 PST m=+0.012075751 [ok] 开始 trace=tr1898d10e85da17201 span=sp1898d10e868464c85 cost=2917ns
+2026-03-01 12:18:33.686914 -0800 PST m=+0.012098001 [ok] internal trace=tr1898d10e85da17201 span=sp1898d10e85da5d702 cost=11194250ns
+2026-03-01 12:21:16.676656000 [ok] code=0 kind=service entry=trace.child step=搞飞机了这里 trace=tr1898d1347974f5d81 span=sp1898d134797747984 cost=125ns
+2026-03-01 12:21:16.687759000 [ok] code=0 kind=service entry=trace.child step=internal trace=tr1898d1347974f5d81 span=sp1898d134797743b03 cost=11103958ns
+2026-03-01 12:21:16.687770000 [ok] code=0 kind=trigger entry=start step=开始 trace=tr1898d1347974f5d81 span=sp1898d1347a20c2505 cost=2791ns
+2026-03-01 12:21:16.687791000 [ok] code=0 kind=trigger entry=start step=internal trace=tr1898d1347974f5d81 span=sp1898d134797724702 cost=11142959ns
+2026-03-01 12:22:11.651043 [ok] code=0 kind=service entry=trace.child step=搞飞机了这里 trace=tr1898d141462f56481 span=sp1898d1414631dad04 cost=125ns
+2026-03-01 12:22:11.662097 [ok] code=0 kind=service entry=trace.child step=internal trace=tr1898d141462f56481 span=sp1898d1414631d6e83 cost=11055125ns
+2026-03-01 12:22:11.662103 [ok] code=0 kind=trigger entry=start step=开始 trace=tr1898d141462f56481 span=sp1898d14146da92385 cost=750ns
+2026-03-01 12:22:11.662126 [ok] code=0 kind=trigger entry=start step=internal trace=tr1898d141462f56481 span=sp1898d1414631bb902 cost=11090625ns
+2026-03-01 12:45:17.183782 [ok] code=0 kind=service entry=trace.child step=搞飞机了这里 trace=tr1898d283de5fb8701 span=sp1898d283de61a8884 cost=125ns
+2026-03-01 12:45:17.194853 [ok] code=0 kind=service entry=trace.child step=internal trace=tr1898d283de5fb8701 span=sp1898d283de61a4a03 cost=11073000ns
+2026-03-01 12:45:17.194870 [ok] code=0 kind=trigger entry=start step=开始 trace=tr1898d283de5fb8701 span=sp1898d283df0aaa285 cost=8167ns
+2026-03-01 12:45:17.194915 [ok] code=0 kind=trigger entry=start step=internal trace=tr1898d283de5fb8701 span=sp1898d283de6189482 cost=11140250ns
