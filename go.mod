@@ -1,3 +1,3 @@
-module github.com/bamgoo/examples
+module github.com/infrago/examples
 
 go 1.25.3

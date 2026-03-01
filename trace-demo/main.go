@@ -4,41 +4,41 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bamgoo/bamgoo"
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
-	"github.com/bamgoo/http"
-	_ "github.com/bamgoo/trace"
-	_ "github.com/bamgoo/trace-file"
-	_ "github.com/bamgoo/trace-greptime"
+	"github.com/infrago/infra"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
+	"github.com/infrago/http"
+	_ "github.com/infrago/trace"
+	_ "github.com/infrago/trace-file"
+	_ "github.com/infrago/trace-greptime"
 )
 
 func main() {
-	bamgoo.Go()
+	infra.Go()
 }
 
 func init() {
 
-	bamgoo.Register("index", http.Router{
+	infra.Register("index", http.Router{
 		Uri: "/", Name: "index", Desc: "index",
 		Action: func(ctx *http.Context) {
-			ctx.Text("hello bamgoo.")
+			ctx.Text("hello infra.")
 		},
 	})
 
-	bamgoo.Register("trace.child", bamgoo.Service{
+	infra.Register("trace.child", infra.Service{
 		Name: "子调用", Desc: "trace child service",
-		Action: func(ctx *bamgoo.Context) Map {
+		Action: func(ctx *infra.Context) Map {
 			ctx.Trace("搞飞机了这里")
 			time.Sleep(10 * time.Millisecond)
 			return Map{"ok": true, "at": time.Now().UnixMilli()}
 		},
 	})
 
-	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
+	infra.Register(infra.START, infra.Trigger{
 		Name: "Trace Demo",
 		Desc: "emit trace spans on startup",
-		Action: func(ctx *bamgoo.Context) {
+		Action: func(ctx *infra.Context) {
 			data := ctx.Invoke("trace.child", Map{"from": "startup"})
 			if res := ctx.Result(); res != nil && res.Fail() {
 

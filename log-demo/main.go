@@ -4,30 +4,30 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bamgoo/bamgoo"
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
-	"github.com/bamgoo/http"
-	"github.com/bamgoo/log"
-	_ "github.com/bamgoo/log-file"
-	_ "github.com/bamgoo/log-greptime"
+	"github.com/infrago/infra"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
+	"github.com/infrago/http"
+	"github.com/infrago/log"
+	_ "github.com/infrago/log-file"
+	_ "github.com/infrago/log-greptime"
 )
 
 func main() {
-	bamgoo.Go()
+	infra.Go()
 }
 
 func init() {
 
-	bamgoo.Register("index", http.Router{
+	infra.Register("index", http.Router{
 		Uri: "/", Name: "index", Desc: "index",
 		Action: func(ctx *http.Context) {
 			log.Debugw("index", Map{"host": ctx.Host})
-			ctx.Text("hello bamgoo.")
+			ctx.Text("hello infra.")
 		},
 	})
 
-	bamgoo.Register("stats", http.Router{
+	infra.Register("stats", http.Router{
 		Uri:  "/stats",
 		Name: "日志统计",
 		Desc: "log stats",
@@ -36,10 +36,10 @@ func init() {
 		},
 	})
 
-	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
+	infra.Register(infra.START, infra.Trigger{
 		Name: "Log Demo",
 		Desc: "emit many logs to test async batch and overflow strategy",
-		Action: func(ctx *bamgoo.Context) {
+		Action: func(ctx *infra.Context) {
 			return
 			const workers = 16
 			const perWorker = 5000

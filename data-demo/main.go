@@ -4,23 +4,23 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bamgoo/bamgoo"
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
-	"github.com/bamgoo/data"
-	_ "github.com/bamgoo/data-mysql"
-	_ "github.com/bamgoo/data-postgresql"
-	_ "github.com/bamgoo/data-sqlite"
-	"github.com/bamgoo/http"
-	"github.com/bamgoo/log"
+	"github.com/infrago/infra"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
+	"github.com/infrago/data"
+	_ "github.com/infrago/data-mysql"
+	_ "github.com/infrago/data-postgresql"
+	_ "github.com/infrago/data-sqlite"
+	"github.com/infrago/http"
+	"github.com/infrago/log"
 )
 
 func main() {
-	bamgoo.Go()
+	infra.Go()
 }
 
 func init() {
-	bamgoo.Register("user", data.Table{
+	infra.Register("user", data.Table{
 		Name: "用户",
 		Key:  "id",
 		Fields: Vars{
@@ -34,7 +34,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("order", data.Table{
+	infra.Register("order", data.Table{
 		Name: "订单",
 		Key:  "id",
 		Fields: Vars{
@@ -45,7 +45,7 @@ func init() {
 			"created": Var{Type: "timestamp"},
 		},
 	})
-	bamgoo.Register("order_agg", data.Table{
+	infra.Register("order_agg", data.Table{
 		Name: "订单聚合快照", Desc: "asdf",
 		Schema: "public", Key: "user_id",
 		Fields: Vars{
@@ -56,13 +56,13 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("user", data.Watcher{
+	infra.Register("user", data.Watcher{
 		Action: func(m data.Mutation) {
 			log.Debug("data watcher any", m.Table, m.Op, m.Rows)
 		},
 	})
 
-	bamgoo.Register("order", data.Watcher{
+	infra.Register("order", data.Watcher{
 		Insert: func(m data.Mutation) {
 			log.Debug("data watcher create", m.Table, m.Key)
 		},
@@ -74,9 +74,9 @@ func init() {
 		},
 	})
 
-	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
+	infra.Register(infra.START, infra.Trigger{
 		Name: "Data Demo", Desc: "Run data module demo on startup",
-		Action: func(ctx *bamgoo.Context) {
+		Action: func(ctx *infra.Context) {
 			db := data.Base("main")
 			defer db.Close()
 			fmt.Println("capabilities", db.Capabilities())
@@ -170,7 +170,7 @@ func init() {
 
 			_ = db.Table("order").ScanN(2, func(item Map) Res {
 				fmt.Println("range item", item)
-				return bamgoo.OK
+				return infra.OK
 			}, Map{
 				"$sort": Map{"id": ASC},
 			})
@@ -183,7 +183,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("data.user", http.Router{
+	infra.Register("data.user", http.Router{
 		Uri:  "/data/user/{id}",
 		Name: "查询用户",
 		Desc: "按ID查询用户",
@@ -201,7 +201,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("data.orders", http.Router{
+	infra.Register("data.orders", http.Router{
 		Uri:  "/data/orders",
 		Name: "订单聚合",
 		Desc: "订单聚合统计",
@@ -226,7 +226,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("data.capabilities", http.Router{
+	infra.Register("data.capabilities", http.Router{
 		Uri:  "/data/capabilities",
 		Name: "能力矩阵",
 		Desc: "查看当前数据驱动能力",
@@ -245,7 +245,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("data.analytics", http.Router{
+	infra.Register("data.analytics", http.Router{
 		Uri:  "/data/analytics",
 		Name: "分析结果",
 		Desc: "读取analytics连接的聚合结果",

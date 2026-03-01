@@ -3,18 +3,18 @@ package main
 import (
 	"fmt"
 
-	_ "github.com/bamgoo/builtin"
+	_ "github.com/infrago/builtin"
 
-	"github.com/bamgoo/bamgoo"
-	"github.com/bamgoo/web"
+	"github.com/infrago/infra"
+	"github.com/infrago/web"
 )
 
 func main() {
-	bamgoo.Go()
+	infra.Go()
 }
 
 func init() {
-	bamgoo.Register("*.logger", web.Filter{
+	infra.Register("*.logger", web.Filter{
 		Name: "请求日志",
 		Request: func(ctx *web.Context) {
 			fmt.Printf("[web] host=%s method=%s path=%s route=%s\n", ctx.Host, ctx.Method, ctx.Path, ctx.Name)
@@ -22,7 +22,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("*.index", web.Router{
+	infra.Register("*.index", web.Router{
 		Uri:  "/",
 		Name: "站点首页",
 		Action: func(ctx *web.Context) {
@@ -30,7 +30,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("www.about", web.Router{
+	infra.Register("www.about", web.Router{
 		Uri:  "/about",
 		Name: "WWW About",
 		Action: func(ctx *web.Context) {
@@ -38,7 +38,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("user.profile", web.Router{
+	infra.Register("user.profile", web.Router{
 		Uri:  "/profile/{id}",
 		Name: "用户资料",
 		Action: func(ctx *web.Context) {
@@ -46,7 +46,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("sys.health", web.Router{
+	infra.Register("sys.health", web.Router{
 		Uri:  "/health",
 		Name: "系统健康检查",
 		Action: func(ctx *web.Context) {

@@ -3,42 +3,42 @@ package main
 import (
 	"fmt"
 
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
-	_ "github.com/bamgoo/bus-redis"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
+	_ "github.com/infrago/bus-redis"
 
-	"github.com/bamgoo/bamgoo"
-	"github.com/bamgoo/bus"
-	"github.com/bamgoo/http"
+	"github.com/infrago/infra"
+	"github.com/infrago/bus"
+	"github.com/infrago/http"
 )
 
 func main() {
-	bamgoo.Run()
+	infra.Run()
 }
 
 func init() {
 
-	bamgoo.Register("test", bamgoo.Service{
+	infra.Register("test", infra.Service{
 		Name: "测试服务", Desc: "测试服务",
-		Action: func(ctx *bamgoo.Context) (Map, Res) {
-			return Map{"msg": "retry from node1"}, bamgoo.OK
+		Action: func(ctx *infra.Context) (Map, Res) {
+			return Map{"msg": "retry from node1"}, infra.OK
 		},
 	})
 
-	bamgoo.Register("test.node1", bamgoo.Service{
+	infra.Register("test.node1", infra.Service{
 		Name: "test", Desc: "test",
-		Action: func(ctx *bamgoo.Context) (Map, Res) {
-			return Map{"msg": "retry from node1"}, bamgoo.OK
+		Action: func(ctx *infra.Context) (Map, Res) {
+			return Map{"msg": "retry from node1"}, infra.OK
 		},
 	})
 
-	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
-		Action: func(ctx *bamgoo.Context) {
+	infra.Register(infra.START, infra.Trigger{
+		Action: func(ctx *infra.Context) {
 			fmt.Println("node1 start....")
 		},
 	})
 
-	bamgoo.Register("index", http.Router{
+	infra.Register("index", http.Router{
 		Uri: "/", Name: "首页", Desc: "首页",
 		Action: func(ctx *http.Context) {
 

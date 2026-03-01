@@ -1,21 +1,21 @@
 package main
 
 import (
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
 
-	"github.com/bamgoo/bamgoo"
+	"github.com/infrago/infra"
 )
 
 func init() {
 
-	bamgoo.Register("sendcloud", bamgoo.Library{
+	infra.Register("sendcloud", infra.Library{
 		Name: "sendcloud", Desc: "SendCloud邮件",
-		Methods: bamgoo.Methods{
-			"send": bamgoo.Method{
+		Methods: infra.Methods{
+			"send": infra.Method{
 				Name: "发送邮件", Desc: "发送邮件",
-				Action: func(ctx *bamgoo.Context) (Map, Res) {
-					return nil, bamgoo.OK
+				Action: func(ctx *infra.Context) (Map, Res) {
+					return nil, infra.OK
 				},
 			},
 		},

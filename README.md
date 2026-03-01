@@ -1,5 +1,5 @@
 # examples
-bamgoo examples.
+infrago examples.
 
 ## Demos
 

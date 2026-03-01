@@ -4,46 +4,46 @@ import (
 	"fmt"
 	"time"
 
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
 
-	"github.com/bamgoo/cron"
-	"github.com/bamgoo/log"
-	"github.com/bamgoo/mutex"
+	"github.com/infrago/cron"
+	"github.com/infrago/log"
+	"github.com/infrago/mutex"
 
-	"github.com/bamgoo/bamgoo"
-	"github.com/bamgoo/http"
+	"github.com/infrago/infra"
+	"github.com/infrago/http"
 
-	_ "github.com/bamgoo/cron-pgsql"
+	_ "github.com/infrago/cron-pgsql"
 )
 
 func main() {
-	bamgoo.Go()
+	infra.Go()
 }
 
 func init() {
 
-	bamgoo.Register("ssss.test", bamgoo.Service{
+	infra.Register("ssss.test", infra.Service{
 		Name: "test", Desc: "test",
-		Action: func(ctx *bamgoo.Context) (Map, Res) {
+		Action: func(ctx *infra.Context) (Map, Res) {
 			log.Debug("ssss.test", time.Now())
-			return nil, bamgoo.OK
+			return nil, infra.OK
 		},
 	})
 
-	bamgoo.Register("cron.test", bamgoo.Method{
+	infra.Register("cron.test", infra.Method{
 		Name: "test", Desc: "test",
-		Action: func(ctx *bamgoo.Context) (Map, Res) {
+		Action: func(ctx *infra.Context) (Map, Res) {
 			log.Debug("cron.test", time.Now())
-			return nil, bamgoo.OK
+			return nil, infra.OK
 		},
 	})
 
-	bamgoo.Register("test", cron.Job{
+	infra.Register("test", cron.Job{
 		Schedule: "*/10 * * * * *", Target: "cron.test",
 	})
 
-	bamgoo.Register("index", http.Router{
+	infra.Register("index", http.Router{
 		Uri: "/", Name: "首页", Desc: "首页",
 		Action: func(ctx *http.Context) {
 			jobs := cron.ListJobs()
@@ -55,14 +55,14 @@ func init() {
 		},
 	})
 
-	// bamgoo.Register("www.index", http.Router{
+	// infra.Register("www.index", http.Router{
 	// 	Uri: "/", Name: "首页", Desc: "首页",
 	// 	Action: func(ctx *http.Context) {
 	// 		cache.Write("key", Map{"msg": "msg from cache."}, time.Second*10)
 	// 		ctx.Text("hello world.")
 	// 	},
 	// })
-	// bamgoo.Register("www.json", http.Router{
+	// infra.Register("www.json", http.Router{
 	// 	Uri: "/json", Name: "JSON", Desc: "JSON",
 	// 	Action: func(ctx *http.Context) {
 	// 		data, _ := cache.Read("key")
@@ -73,9 +73,9 @@ func init() {
 	// 	},
 	// })
 
-	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
+	infra.Register(infra.START, infra.Trigger{
 		Name: "启动", Desc: "启动",
-		Action: func(ctx *bamgoo.Context) {
+		Action: func(ctx *infra.Context) {
 			data := ctx.Invoke("ssss.test", Map{"msg": "msg from examples."})
 			res := ctx.Result()
 

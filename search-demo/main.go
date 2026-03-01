@@ -5,26 +5,26 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bamgoo/bamgoo"
-	. "github.com/bamgoo/base"
-	_ "github.com/bamgoo/builtin"
-	"github.com/bamgoo/http"
-	"github.com/bamgoo/search"
+	"github.com/infrago/infra"
+	. "github.com/infrago/base"
+	_ "github.com/infrago/builtin"
+	"github.com/infrago/http"
+	"github.com/infrago/search"
 
-	_ "github.com/bamgoo/search-elasticsearch"
-	_ "github.com/bamgoo/search-file"
-	_ "github.com/bamgoo/search-meilisearch"
-	_ "github.com/bamgoo/search-opensearch"
+	_ "github.com/infrago/search-elasticsearch"
+	_ "github.com/infrago/search-file"
+	_ "github.com/infrago/search-meilisearch"
+	_ "github.com/infrago/search-opensearch"
 )
 
 const indexName = "article"
 
 func main() {
-	bamgoo.Go()
+	infra.Go()
 }
 
 func init() {
-	bamgoo.Register(indexName, search.Index{
+	infra.Register(indexName, search.Index{
 		Name:        "文章索引",
 		Primary:     "id",
 		StrictWrite: true,
@@ -40,10 +40,10 @@ func init() {
 		},
 	})
 
-	bamgoo.Register(bamgoo.START, bamgoo.Trigger{
+	infra.Register(infra.START, infra.Trigger{
 		Name: "search-demo-init",
 		Desc: "create index and seed docs",
-		Action: func(ctx *bamgoo.Context) {
+		Action: func(ctx *infra.Context) {
 			_ = search.Upsert(indexName,
 				Map{"id": "1001", "title": "Go 微服务实战", "content": "Bamgoo + Nomad + NATS 快速搭建高性能服务", "category": "tech", "tags": []string{"go", "microservice", "nomad"}, "score": 9.7, "created": time.Now().Unix()},
 				Map{"id": "1002", "title": "搜索系统设计", "content": "全文检索、过滤、分面和高亮设计要点", "category": "arch", "tags": []string{"search", "design"}, "score": 9.3, "created": time.Now().Unix()},
@@ -53,7 +53,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.index", http.Router{
+	infra.Register("search.index", http.Router{
 		Uri:  "/",
 		Name: "search-demo-index",
 		Desc: "help",
@@ -71,7 +71,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.query", http.Router{
+	infra.Register("search.query", http.Router{
 		Uri:  "/search",
 		Name: "search-query",
 		Desc: "query docs",
@@ -107,7 +107,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.count", http.Router{
+	infra.Register("search.count", http.Router{
 		Uri:  "/search/count",
 		Name: "search-count",
 		Desc: "count docs",
@@ -122,7 +122,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.reindex", http.Router{
+	infra.Register("search.reindex", http.Router{
 		Uri:  "/search/reindex",
 		Name: "search-reindex",
 		Desc: "reindex docs",
@@ -138,7 +138,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.delete", http.Router{
+	infra.Register("search.delete", http.Router{
 		Uri:  "/search/doc/{id}",
 		Name: "search-delete",
 		Desc: "delete doc",
@@ -156,7 +156,7 @@ func init() {
 		},
 	})
 
-	bamgoo.Register("search.clear", http.Router{
+	infra.Register("search.clear", http.Router{
 		Uri:  "/search/clear",
 		Name: "search-clear",
 		Desc: "clear index",
