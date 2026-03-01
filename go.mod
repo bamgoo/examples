@@ -3,31 +3,31 @@ module github.com/infrago/examples
 go 1.25.3
 
 require (
-	github.com/infrago/base v0.7.0
-	github.com/infrago/builtin v0.7.0
-	github.com/infrago/bus v0.7.0
-	github.com/infrago/bus-redis v0.7.0
-	github.com/infrago/cron v0.7.0
-	github.com/infrago/cron-pgsql v0.7.0
-	github.com/infrago/data v0.7.0
-	github.com/infrago/data-mysql v0.7.0
-	github.com/infrago/data-postgresql v0.7.0
-	github.com/infrago/data-sqlite v0.7.0
-	github.com/infrago/http v0.2.6
-	github.com/infrago/infra v0.7.0
-	github.com/infrago/log v0.7.0
-	github.com/infrago/log-file v0.7.0
-	github.com/infrago/log-greptime v0.7.0
-	github.com/infrago/mutex v0.7.0
-	github.com/infrago/search v0.7.0
-	github.com/infrago/search-elasticsearch v0.7.0
-	github.com/infrago/search-file v0.7.0
-	github.com/infrago/search-meilisearch v0.7.0
-	github.com/infrago/search-opensearch v0.7.0
-	github.com/infrago/trace v0.7.0
-	github.com/infrago/trace-file v0.7.0
-	github.com/infrago/trace-greptime v0.7.0
-	github.com/infrago/web v0.7.0
+	github.com/infrago/base v0.8.1
+	github.com/infrago/builtin v0.8.1
+	github.com/infrago/bus v0.8.1
+	github.com/infrago/bus-redis v0.8.1
+	github.com/infrago/cron v0.8.1
+	github.com/infrago/cron-pgsql v0.8.1
+	github.com/infrago/data v0.8.1
+	github.com/infrago/data-mysql v0.8.1
+	github.com/infrago/data-postgresql v0.8.1
+	github.com/infrago/data-sqlite v0.8.1
+	github.com/infrago/http v0.8.1
+	github.com/infrago/infra v0.8.1
+	github.com/infrago/log v0.8.1
+	github.com/infrago/log-file v0.8.1
+	github.com/infrago/log-greptime v0.8.1
+	github.com/infrago/mutex v0.8.1
+	github.com/infrago/search v0.8.1
+	github.com/infrago/search-elasticsearch v0.8.1
+	github.com/infrago/search-file v0.8.1
+	github.com/infrago/search-meilisearch v0.8.1
+	github.com/infrago/search-opensearch v0.8.1
+	github.com/infrago/trace v0.8.1
+	github.com/infrago/trace-file v0.8.1
+	github.com/infrago/trace-greptime v0.8.1
+	github.com/infrago/web v0.8.1
 )
 
 require (
@@ -62,10 +62,10 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
-	github.com/infrago/bus-nats v0.7.0 // indirect
-	github.com/infrago/mutex-redis v0.7.0 // indirect
-	github.com/infrago/util v0.7.0 // indirect
-	github.com/infrago/view v0.7.0 // indirect
+	github.com/infrago/bus-nats v0.8.1 // indirect
+	github.com/infrago/mutex-redis v0.8.1 // indirect
+	github.com/infrago/util v0.8.1 // indirect
+	github.com/infrago/view v0.8.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.7.6 // indirect
