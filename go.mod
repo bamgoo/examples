@@ -3,35 +3,35 @@ module github.com/infrago/examples
 go 1.25.3
 
 require (
-	github.com/infrago/base v0.8.1
-	github.com/infrago/builtin v0.8.1
-	github.com/infrago/bus v0.8.1
-	github.com/infrago/bus-nats v0.8.1 // indirect
-	github.com/infrago/bus-redis v0.8.1
-	github.com/infrago/cron v0.8.1
-	github.com/infrago/cron-pgsql v0.8.1
-	github.com/infrago/data v0.8.1
-	github.com/infrago/data-mysql v0.8.1
-	github.com/infrago/data-postgresql v0.8.1
-	github.com/infrago/data-sqlite v0.8.1
-	github.com/infrago/http v0.8.1
-	github.com/infrago/infra v0.8.1
-	github.com/infrago/log v0.8.1
-	github.com/infrago/log-file v0.8.1
-	github.com/infrago/log-greptime v0.8.1
-	github.com/infrago/mutex v0.8.1
-	github.com/infrago/mutex-redis v0.8.1 // indirect
-	github.com/infrago/search v0.8.1
-	github.com/infrago/search-elasticsearch v0.8.1
-	github.com/infrago/search-file v0.8.1
-	github.com/infrago/search-meilisearch v0.8.1
-	github.com/infrago/search-opensearch v0.8.1
-	github.com/infrago/trace v0.8.1
-	github.com/infrago/trace-file v0.8.1
-	github.com/infrago/trace-greptime v0.8.1
-	github.com/infrago/util v0.8.1 // indirect
-	github.com/infrago/view v0.8.1 // indirect
-	github.com/infrago/web v0.8.1
+	github.com/infrago/base v0.8.2
+	github.com/infrago/builtin v0.8.2
+	github.com/infrago/bus v0.8.2
+	github.com/infrago/bus-nats v0.8.2 // indirect
+	github.com/infrago/bus-redis v0.8.2
+	github.com/infrago/cron v0.8.2
+	github.com/infrago/cron-pgsql v0.8.2
+	github.com/infrago/data v0.8.2
+	github.com/infrago/data-mysql v0.8.2
+	github.com/infrago/data-postgresql v0.8.2
+	github.com/infrago/data-sqlite v0.8.2
+	github.com/infrago/http v0.8.2
+	github.com/infrago/infra v0.8.2
+	github.com/infrago/log v0.8.2
+	github.com/infrago/log-file v0.8.2
+	github.com/infrago/log-greptime v0.8.2
+	github.com/infrago/mutex v0.8.2
+	github.com/infrago/mutex-redis v0.8.2 // indirect
+	github.com/infrago/search v0.8.2
+	github.com/infrago/search-elasticsearch v0.8.2
+	github.com/infrago/search-file v0.8.2
+	github.com/infrago/search-meilisearch v0.8.2
+	github.com/infrago/search-opensearch v0.8.2
+	github.com/infrago/trace v0.8.2
+	github.com/infrago/trace-file v0.8.2
+	github.com/infrago/trace-greptime v0.8.2
+	github.com/infrago/util v0.8.2 // indirect
+	github.com/infrago/view v0.8.2 // indirect
+	github.com/infrago/web v0.8.2
 )
 
 require (
