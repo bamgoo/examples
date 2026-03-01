@@ -18,6 +18,15 @@ func main() {
 }
 
 func init() {
+
+	bamgoo.Register("index", http.Router{
+		Uri: "/", Name: "index", Desc: "index",
+		Action: func(ctx *http.Context) {
+			log.Debugw("index", Map{"host": ctx.Host})
+			ctx.Text("hello bamgoo.")
+		},
+	})
+
 	bamgoo.Register("stats", http.Router{
 		Uri:  "/stats",
 		Name: "日志统计",
@@ -31,6 +40,7 @@ func init() {
 		Name: "Log Demo",
 		Desc: "emit many logs to test async batch and overflow strategy",
 		Action: func(ctx *bamgoo.Context) {
+			return
 			const workers = 16
 			const perWorker = 5000
 

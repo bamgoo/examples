@@ -1,33 +1,32 @@
-[trace.console]
-driver = "default"
-# json = true
-sample = 1
-buffer = 1024
-timeout = "200ms"
-
-[trace.file]
-driver = "file"
-json = true
-sample = 1
-buffer = 1024
-timeout = "200ms"
-
-[trace.file.setting]
-output = "trace.log"
-maxsize = "50MB"
-slice = "day"
-maxage = "7d"
-maxfiles = 7
-
-[trace.greptime]
+[trace]
 driver = "greptime"
-sample = 1
-buffer = 1024
-timeout = "200ms"
 
-[trace.greptime.setting]
-host = "127.0.0.1"
-port = 4001
-database = "public"
-table = "traces"
-insecure = true
+[http]
+port = 8010
+
+# [trace.file]
+# driver = "file"
+# json = true
+# sample = 1
+# buffer = 1024
+# timeout = "200ms"
+
+# [trace.file.setting]
+# output = "trace.log"
+# maxsize = "50MB"
+# slice = "day"
+# maxage = "7d"
+# maxfiles = 7
+
+# [trace.greptime]
+# driver = "greptime"
+# sample = 1
+# buffer = 1024
+# timeout = "200ms"
+
+# [trace.greptime.setting]
+# host = "127.0.0.1"
+# port = 4001
+# database = "public"
+# table = "traces"
+# insecure = true
