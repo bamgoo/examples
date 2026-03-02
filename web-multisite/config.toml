@@ -3,14 +3,14 @@ name = "web-multisite"
 [web]
 driver = "default"
 host = "0.0.0.0"
-port = 80
-domain = "dev.com"
+port = 8090
+domain = "demo.local"
 
 [site.www]
-domain = "www.dev.com"
+alias = ["www1", "home"]
 
-[site.user]
-domain = "user.dev.com"
+[site.file]
+alias = ["fs", "cdn"]
 
-[site.sys]
-domain = "sys.dev.com"
+[site.api]
+alias = ["openapi", "gateway"]

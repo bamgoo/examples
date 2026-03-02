@@ -1,6 +1,5 @@
 [trace]
-driver = "file"
-josn = true
+driver = "greptime"
 
 [http]
 port = 8010
