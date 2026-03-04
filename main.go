@@ -11,10 +11,10 @@ import (
 	"github.com/infrago/log"
 	"github.com/infrago/mutex"
 
-	"github.com/infrago/infra"
 	"github.com/infrago/http"
+	"github.com/infrago/infra"
 
-	_ "github.com/infrago/cron-pgsql"
+	_ "github.com/infrago/cron-postgres"
 )
 
 func main() {

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/infrago/infra"
 	. "github.com/infrago/base"
 	_ "github.com/infrago/builtin"
 	"github.com/infrago/data"
 	_ "github.com/infrago/data-mysql"
-	_ "github.com/infrago/data-postgresql"
+	_ "github.com/infrago/data-postgres"
 	_ "github.com/infrago/data-sqlite"
 	"github.com/infrago/http"
+	"github.com/infrago/infra"
 	"github.com/infrago/log"
 )
 
@@ -134,6 +134,26 @@ func init() {
 			_ = db.Table("order").Insert(Map{"id": 1, "user_id": 1001, "amount": 39.5, "status": "paid", "created": time.Now()})
 			_ = db.Table("order").Insert(Map{"id": 2, "user_id": 1001, "amount": 72.0, "status": "paid", "created": time.Now()})
 			_ = db.Table("order").Insert(Map{"id": 3, "user_id": 1001, "amount": 9.0, "status": "new", "created": time.Now()})
+			_ = db.Table("order").Insert(Map{"id": 4, "user_id": 1001, "amount": 15.0, "status": "new", "created": time.Now()})
+
+			updatedOne := db.Table("order").Update(Map{
+				"$set": Map{"status": "processing"},
+			}, Map{
+				"status": "new",
+			})
+			updatedMany := db.Table("order").UpdateMany(Map{
+				"$set": Map{"status": "paid"},
+			}, Map{
+				"status": "processing",
+			})
+			deletedOne := db.Table("order").Delete(Map{
+				"status": "new",
+			})
+			deletedMany := db.Table("order").DeleteMany(Map{
+				"status": "paid",
+				"id":     Map{"$gt": 2},
+			})
+			fmt.Println("update one", updatedOne, "update many", updatedMany, "delete one", deletedOne, "delete many", deletedMany)
 
 			rows := db.Table("order").Aggregate(Map{
 				"status": "paid",

@@ -9,10 +9,10 @@ require (
 	github.com/infrago/bus-nats v0.9.0 // indirect
 	github.com/infrago/bus-redis v0.9.0
 	github.com/infrago/cron v0.9.0
-	github.com/infrago/cron-pgsql v0.9.0
+	github.com/infrago/cron-postgres v0.9.0
 	github.com/infrago/data v0.9.0
 	github.com/infrago/data-mysql v0.9.0
-	github.com/infrago/data-postgresql v0.9.0
+	github.com/infrago/data-postgres v0.9.0
 	github.com/infrago/data-sqlite v0.9.0
 	github.com/infrago/http v0.9.0
 	github.com/infrago/infra v0.9.0
@@ -109,3 +109,7 @@ require (
 replace github.com/infrago/token => ../token
 
 replace github.com/infrago/token-memory => ../token-memory
+
+replace github.com/infrago/cron-postgres => ../cron-postgres
+
+replace github.com/infrago/data-postgres => ../data-postgres

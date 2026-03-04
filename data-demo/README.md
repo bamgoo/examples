@@ -17,3 +17,24 @@ curl http://127.0.0.1:8099/data/orders
 curl http://127.0.0.1:8099/data/capabilities
 curl http://127.0.0.1:8099/data/analytics
 ```
+
+Write API semantics used in demo:
+
+```go
+// single row (default sort by primary key asc when no $sort)
+affected := db.Table("order").Update(base.Map{
+  "$set": base.Map{"status": "processing"},
+}, base.Map{"status": "new"})
+
+affected = db.Table("order").Delete(base.Map{"status": "new"})
+
+// all matched rows
+affected = db.Table("order").UpdateMany(base.Map{
+  "$set": base.Map{"status": "paid"},
+}, base.Map{"status": "processing"})
+
+affected = db.Table("order").DeleteMany(base.Map{
+  "status": "paid",
+  "id": base.Map{"$gt": 2},
+})
+```
