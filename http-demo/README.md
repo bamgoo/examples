@@ -1,13 +1,8 @@
-# web-multisite
+# web-demo
 
 单端口多站点示例（`www`、`file`、`api` 三个站点）。
 
 ## 运行
-
-```bash
-cd /Users/yatniel/coding/bamgoo/examples/web-demo
-go run .
-```
 
 默认监听 `0.0.0.0:8090`。
 

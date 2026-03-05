@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/infrago/infra"
 	. "github.com/infrago/base"
 	_ "github.com/infrago/builtin"
 	"github.com/infrago/http"
+	"github.com/infrago/infra"
 	"github.com/infrago/search"
 
 	_ "github.com/infrago/search-elasticsearch"
@@ -45,7 +45,7 @@ func init() {
 		Desc: "create index and seed docs",
 		Action: func(ctx *infra.Context) {
 			_ = search.Upsert(indexName,
-				Map{"id": "1001", "title": "Go 微服务实战", "content": "Bamgoo + Nomad + NATS 快速搭建高性能服务", "category": "tech", "tags": []string{"go", "microservice", "nomad"}, "score": 9.7, "created": time.Now().Unix()},
+				Map{"id": "1001", "title": "Go 微服务实战", "content": "infrago + Nomad + NATS 快速搭建高性能服务", "category": "tech", "tags": []string{"go", "microservice", "nomad"}, "score": 9.7, "created": time.Now().Unix()},
 				Map{"id": "1002", "title": "搜索系统设计", "content": "全文检索、过滤、分面和高亮设计要点", "category": "arch", "tags": []string{"search", "design"}, "score": 9.3, "created": time.Now().Unix()},
 				Map{"id": "1003", "title": "Meilisearch 上手", "content": "轻量搜索服务快速接入指南", "category": "tech", "tags": []string{"meilisearch", "search"}, "score": 8.8, "created": time.Now().Unix()},
 				Map{"id": "1004", "title": "OpenSearch 聚合", "content": "通过 terms 聚合做 category 统计", "category": "arch", "tags": []string{"opensearch", "aggs"}, "score": 8.9, "created": time.Now().Unix()},

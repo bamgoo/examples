@@ -4,11 +4,6 @@
 
 ## 运行
 
-```bash
-cd /Users/yatniel/coding/bamgoo/examples/web-demo
-go run .
-```
-
 默认监听 `0.0.0.0:8090`。
 
 ## 测试

@@ -2,7 +2,7 @@ project = "web-demo"
 
 [web]
 port = 80
-domain = "bamgoo.org"
+domain = "infrago.org"
 
 [site.www]
 alias = ["www1", "home"]
