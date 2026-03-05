@@ -1,10 +1,8 @@
-name = "web-multisite"
+project = "web-demo"
 
 [web]
-driver = "default"
-host = "0.0.0.0"
-port = 8090
-domain = "demo.local"
+port = 80
+domain = "bamgoo.org"
 
 [site.www]
 alias = ["www1", "home"]

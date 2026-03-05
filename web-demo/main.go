@@ -27,6 +27,23 @@ func init() {
 		},
 	})
 
+	// 空站点（default）：只有以 "." 开头注册的才会进入这里。
+	infra.Register(".index", web.Router{
+		Uri:  "/",
+		Name: "空站点首页",
+		Action: func(ctx *web.Context) {
+			ctx.JSON(Map{
+				"site":       ctx.Site,
+				"route":      ctx.Name,
+				"url":        ctx.RouteUrl("www.index"),
+				"host":       ctx.Host,
+				"domain":     ctx.Domain,
+				"rootDomain": ctx.RootDomain,
+				"tip":        "matched empty-site router",
+			})
+		},
+	})
+
 	infra.Register("*.home", web.Router{
 		Uri:  "/",
 		Name: "通用首页",
@@ -62,23 +79,6 @@ func init() {
 		},
 	})
 
-	// 空站点（default）：只有以 "." 开头注册的才会进入这里。
-	infra.Register(".index", web.Router{
-		Uri:  "/",
-		Name: "空站点首页",
-		Action: func(ctx *web.Context) {
-			ctx.JSON(Map{
-				"site":       ctx.Site,
-				"route":      ctx.Name,
-				"url":        ctx.Url.Routo("www.index"),
-				"host":       ctx.Host,
-				"domain":     ctx.Domain,
-				"rootDomain": ctx.RootDomain,
-				"tip":        "matched empty-site router",
-			})
-		},
-	})
-
 	infra.Register("www.index", web.Router{
 		Uri:  "/",
 		Name: "WWW 首页",
@@ -111,10 +111,13 @@ func init() {
 		Uri:  "/list",
 		Name: "文件列表模拟",
 		Action: func(ctx *web.Context) {
-			ctx.JSON(Map{
-				"site":  "file",
-				"files": []string{"a.jpg", "b.pdf", "c.mp4"},
-			})
+			ctx.View("asdfasf")
+
+			// ctx.JSON(Map{
+			// 	"site":  "file",
+			// 	"files": []string{"a.jpg", "b.pdf", "c.mp4"},
+			// 	"url":   ctx.RouteUrl(".index"),
+			// })
 		},
 	})
 

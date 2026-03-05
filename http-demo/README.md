@@ -5,7 +5,7 @@
 ## 运行
 
 ```bash
-cd /Users/yatniel/coding/bamgoo/examples/web-multisite
+cd /Users/yatniel/coding/bamgoo/examples/web-demo
 go run .
 ```
 

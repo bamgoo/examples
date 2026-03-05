@@ -1,0 +1,4 @@
+project = "web-demo"
+
+[http]
+port = 80
