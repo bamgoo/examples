@@ -22,14 +22,14 @@ Write API semantics used in demo:
 
 ```go
 // single row (default sort by primary key asc when no $sort)
-affected := db.Table("order").Update(base.Map{
+updated := db.Table("order").Update(base.Map{
   "$set": base.Map{"status": "processing"},
 }, base.Map{"status": "new"})
 
-affected = db.Table("order").Delete(base.Map{"status": "new"})
+deleted := db.Table("order").Delete(base.Map{"status": "new"})
 
 // all matched rows
-affected = db.Table("order").UpdateMany(base.Map{
+affected := db.Table("order").UpdateMany(base.Map{
   "$set": base.Map{"status": "paid"},
 }, base.Map{"status": "processing"})
 
@@ -37,4 +37,5 @@ affected = db.Table("order").DeleteMany(base.Map{
   "status": "paid",
   "id": base.Map{"$gt": 2},
 })
+_, _, _ = updated, deleted, affected
 ```
