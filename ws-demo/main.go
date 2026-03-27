@@ -69,6 +69,10 @@ const demoPage = `<!doctype html>
       grid-template-columns: 1.1fr .9fr;
       gap: 16px;
     }
+    .grid.full {
+      margin-top: 16px;
+      grid-template-columns: 1fr 1fr;
+    }
     .card {
       padding: 20px;
       border-radius: 20px;
@@ -132,6 +136,11 @@ const demoPage = `<!doctype html>
       text-transform: uppercase;
       color: var(--accent2);
     }
+    .sub {
+      margin: 0 0 14px;
+      font-size: 14px;
+      color: var(--muted);
+    }
     @media (max-width: 900px) {
       .grid {
         grid-template-columns: 1fr;
@@ -146,7 +155,7 @@ const demoPage = `<!doctype html>
   <div class="wrap">
     <section class="hero">
       <h1>WebSocket Demo</h1>
-      <p>这个页面同时演示默认 <code>ctx.Upgrade()</code> 和自定义 <code>web.Endpoint</code> 接入。支持 echo、join、groupcast、broadcast。</p>
+      <p>这个页面同时演示默认 <code>ctx.Upgrade()</code> 和自定义 <code>space</code> 隔离。支持 echo、join、groupcast、broadcast。</p>
     </section>
 
     <section class="grid">
@@ -195,16 +204,51 @@ const demoPage = `<!doctype html>
         <pre id="log"></pre>
       </div>
     </section>
+
+    <section class="grid full">
+      <div class="card">
+        <div class="label">Protocol</div>
+        <p class="sub">直接读取 <code>/ws/export</code>，按 space 展示消息和命令。</p>
+        <div class="row">
+          <button onclick="loadProtocol()">Refresh Protocol</button>
+        </div>
+        <pre id="protocol"></pre>
+      </div>
+
+      <div class="card">
+        <div class="label">Metrics</div>
+        <p class="sub">直接读取 <code>/ws/metrics</code>，看连接、用户、收发和队列状态。</p>
+        <div class="row">
+          <button onclick="loadMetrics()">Refresh Metrics</button>
+        </div>
+        <pre id="metrics"></pre>
+      </div>
+    </section>
   </div>
 
   <script>
     let ws;
     const logNode = document.getElementById("log");
     const statusNode = document.getElementById("status");
+    const protocolNode = document.getElementById("protocol");
+    const metricsNode = document.getElementById("metrics");
 
     function write(label, payload) {
       const line = "[" + new Date().toLocaleTimeString() + "] " + label + " " + JSON.stringify(payload);
       logNode.textContent = line + "\n" + logNode.textContent;
+    }
+
+    async function readMessagePayload(data) {
+      if (typeof data === "string") {
+        return data;
+      }
+      if (data instanceof Blob) {
+        return await data.text();
+      }
+      if (data instanceof ArrayBuffer) {
+        return new TextDecoder().decode(data);
+      }
+      return data;
     }
 
     function connectTo(path) {
@@ -226,13 +270,104 @@ const demoPage = `<!doctype html>
         statusNode.textContent = "status: error";
         write("error", { ok: false });
       };
-      ws.onmessage = (event) => {
+      ws.onmessage = async (event) => {
         try {
-          write("message", JSON.parse(event.data));
+          const payload = await readMessagePayload(event.data);
+          if (typeof payload === "string") {
+            write("message", JSON.parse(payload));
+            return;
+          }
+          write("message", payload);
         } catch (e) {
-          write("message", event.data);
+          write("message", { error: String(e) });
         }
       };
+    }
+
+    function formatJSON(value) {
+      return JSON.stringify(value, null, 2);
+    }
+
+    function renderProtocol(doc) {
+      const lines = [];
+      lines.push("schema");
+      lines.push(formatJSON(doc.schema || {}));
+      lines.push("");
+      lines.push("config");
+      lines.push(formatJSON(doc.config || {}));
+      lines.push("");
+
+      const spaces = Array.isArray(doc.spaces) ? doc.spaces : [];
+      for (const item of spaces) {
+        lines.push("space: " + (item.space || "default"));
+        lines.push("  messages: " + (item.message_count || 0) +
+          "  commands: " + (item.command_count || 0) +
+          "  filters: " + (item.filter_count || 0) +
+          "  handlers: " + (item.handler_count || 0) +
+          "  hooks: " + (item.hook_count || 0));
+
+        const messages = item.messages || {};
+        for (const name of Object.keys(messages).sort()) {
+          const msg = messages[name] || {};
+          lines.push("  message " + name);
+          if (msg.desc) {
+            lines.push("    desc: " + msg.desc);
+          }
+          lines.push("    request:");
+          lines.push(indent(formatJSON(msg.request || msg.sample || {}), 6));
+          lines.push("    response:");
+          lines.push(indent(formatJSON(msg.response || {}), 6));
+        }
+
+        const commands = item.commands || {};
+        for (const name of Object.keys(commands).sort()) {
+          const cmd = commands[name] || {};
+          lines.push("  command " + name);
+          if (cmd.desc) {
+            lines.push("    desc: " + cmd.desc);
+          }
+          lines.push("    response:");
+          lines.push(indent(formatJSON(cmd.response || cmd.sample || {}), 6));
+        }
+        lines.push("");
+      }
+
+      lines.push("errors");
+      lines.push(formatJSON(doc.errors || []));
+      protocolNode.textContent = lines.join("\n");
+    }
+
+    function renderMetrics(doc) {
+      metricsNode.textContent = formatJSON(doc || {});
+    }
+
+    function indent(text, spaces) {
+      const prefix = " ".repeat(spaces);
+      return String(text).split("\n").map(line => prefix + line).join("\n");
+    }
+
+    async function loadJSON(path) {
+      const res = await fetch(path, { headers: { "accept": "application/json" } });
+      if (!res.ok) {
+        throw new Error(path + " => " + res.status);
+      }
+      return await res.json();
+    }
+
+    async function loadProtocol() {
+      try {
+        renderProtocol(await loadJSON("/ws/export"));
+      } catch (err) {
+        protocolNode.textContent = String(err);
+      }
+    }
+
+    async function loadMetrics() {
+      try {
+        renderMetrics(await loadJSON("/ws/metrics"));
+      } catch (err) {
+        metricsNode.textContent = String(err);
+      }
     }
 
     function connect() {
@@ -288,6 +423,10 @@ const demoPage = `<!doctype html>
         text: document.getElementById("noticeText").value
       });
     }
+
+    loadProtocol();
+    loadMetrics();
+    setInterval(loadMetrics, 3000);
   </script>
 </body>
 </html>`
@@ -296,43 +435,7 @@ func main() {
 	infra.Go()
 }
 
-func acceptOptions(ctx *web.Context, socket web.Socket) ws.AcceptOptions {
-	return ws.AcceptOptions{
-		Conn:       socket,
-		Meta:       ctx.Meta,
-		Name:       ctx.Name,
-		Site:       ctx.Site,
-		Host:       ctx.Host,
-		Domain:     ctx.Domain,
-		RootDomain: ctx.RootDomain,
-		Path:       ctx.Path,
-		Uri:        ctx.Uri,
-		Setting:    ctx.Setting,
-		Params:     ctx.Params,
-		Query:      ctx.Query,
-		Form:       ctx.Form,
-		Value:      ctx.Value,
-		Args:       ctx.Args,
-		Locals:     ctx.Locals,
-	}
-}
-
 func init() {
-	infra.Register("custom", web.Endpoint{
-		Name: "custom",
-		Desc: "demo custom ws endpoint",
-		Accept: func(ctx *web.Context, socket web.Socket) error {
-			opts := acceptOptions(ctx, socket)
-			locals := Map{}
-			for key, value := range opts.Locals {
-				locals[key] = value
-			}
-			locals["endpoint"] = "custom"
-			opts.Locals = locals
-			return ws.Accept(opts)
-		},
-	})
-
 	infra.Register(".index", web.Router{
 		Uri:  "/",
 		Name: "ws demo home",
@@ -353,7 +456,7 @@ func init() {
 
 	infra.Register(".socket.custom", web.Router{
 		Uri:  "/socket/custom",
-		Name: "ws demo custom socket",
+		Name: "ws demo custom space socket",
 		Action: func(ctx *web.Context) {
 			if err := ctx.Upgrade("custom"); err != nil {
 				ctx.Error(infra.Fail.With(err.Error()))
@@ -381,15 +484,11 @@ func init() {
 		Name: "ws access",
 		Open: func(ctx *ws.Context) {
 			fmt.Printf("[ws] open sid=%s route=%s host=%s\n", ctx.Session.ID, ctx.Session.Name, ctx.Session.Host)
-			endpoint, _ := ctx.Session.Locals["endpoint"].(string)
-			if endpoint == "" {
-				endpoint = "ws"
-			}
 			_ = ctx.Reply("demo.ready", Map{
-				"sid":      ctx.Session.ID,
-				"route":    ctx.Session.Name,
-				"user":     ctx.Session.User,
-				"endpoint": endpoint,
+				"sid":   ctx.Session.ID,
+				"route": ctx.Session.Name,
+				"user":  ctx.Session.User,
+				"space": ctx.Space,
 			})
 		},
 		Close: func(ctx *ws.Context) {

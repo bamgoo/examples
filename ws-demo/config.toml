@@ -4,10 +4,8 @@ project = "ws-demo"
 port = 8080
 
 [ws]
-format = "text"
+format = "binary"
 codec = "json"
-message_key = "name"
-payload_key = "data"
 ping_interval = "30s"
 read_timeout = "75s"
 write_timeout = "10s"
