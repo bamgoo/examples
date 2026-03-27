@@ -1,0 +1,17 @@
+project = "ws-demo"
+
+[web]
+port = 8080
+
+[ws]
+format = "text"
+codec = "json"
+message_key = "name"
+payload_key = "data"
+ping_interval = "30s"
+read_timeout = "75s"
+write_timeout = "10s"
+max_message_size = 4194304
+queue_size = 128
+queue_policy = "close"
+compression = false

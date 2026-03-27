@@ -32,7 +32,30 @@ require (
 	github.com/infrago/util v0.17.0 // indirect
 	github.com/infrago/view v0.17.0 // indirect
 	github.com/infrago/web v0.17.0
+	github.com/infrago/ws v0.17.0
 )
+
+replace github.com/infrago/base => ../base
+
+replace github.com/infrago/builtin => ../builtin
+
+replace github.com/infrago/bus => ../bus
+
+replace github.com/infrago/bus-nats => ../bus-nats
+
+replace github.com/infrago/bus-redis => ../bus-redis
+
+replace github.com/infrago/infra => ../infra
+
+replace github.com/infrago/mutex => ../mutex
+
+replace github.com/infrago/mutex-redis => ../mutex-redis
+
+replace github.com/infrago/view => ../view
+
+replace github.com/infrago/web => ../web
+
+replace github.com/infrago/ws => ../ws
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
@@ -106,7 +129,14 @@ require (
 	modernc.org/sqlite v1.39.0 // indirect
 )
 
-
-
-
-
+require (
+	github.com/gorilla/websocket v1.5.3 // indirect
+	github.com/tidwall/btree v1.4.2 // indirect
+	github.com/tidwall/buntdb v1.3.2 // indirect
+	github.com/tidwall/gjson v1.14.3 // indirect
+	github.com/tidwall/grect v0.1.4 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tidwall/rtred v0.1.2 // indirect
+	github.com/tidwall/tinyqueue v0.1.1 // indirect
+)
