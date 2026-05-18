@@ -101,7 +101,10 @@ func init() {
 		Action: func(ctx *http.Context) {
 			tid := ctx.TokenId()
 			if tid != "" {
-				_ = ctx.RevokeTokenID(tid, time.Now().Add(time.Hour).Unix())
+				if err := ctx.RevokeCurrentTokenID(); err != nil {
+					ctx.Fail(infra.Fail.With(err.Error()))
+					return
+				}
 			}
 			ctx.JSON(Map{"ok": true, "token_id": tid, "revoked": true})
 		},
