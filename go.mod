@@ -75,7 +75,6 @@ require (
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/json-iterator/go v0.0.0-20171115153421-f7279a603ede // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mschoch/smat v0.2.0 // indirect
@@ -120,15 +119,3 @@ require (
 )
 
 exclude google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f
-
-
-
-
-
-
-
-
-
-
-
-
